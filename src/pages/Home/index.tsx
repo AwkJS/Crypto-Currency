@@ -1,11 +1,17 @@
 import React, { useState } from 'react';
 import api from '../../api';
-import * as H from './styles'
+import * as H from './styles';
+
+import Bitcoin_Icon from '../../assets/Bitcoin_Icon.png';
+import Ethereum_Icon from '../../assets/Ethereum_Icon.png';
 
 const Home: React.FC = () => {
 
-    const [priceBitcoin, setPriceBitcoin] = useState('');
-    const [priceEthereum, setPriceEthereum] = useState('');
+    const [priceBitcoinUSD, setPriceBitcoinUSD] = useState('');
+    const [priceBitcoinBRL, setPriceBitcoinBRL] = useState('');
+
+    const [priceEthereumUSD, setPriceEthereumUSD] = useState('');
+    const [priceEthereumBRL, setPriceEthereumBRL] = useState('');
 
     
     async function getAllCryptos(){
@@ -34,7 +40,7 @@ const Home: React.FC = () => {
         const priceResponse = await api.get('simple/price', {
             params: {
                 ids: "bitcoin,ethereum",
-                vs_currencies: "usd",
+                vs_currencies: "usd,brl",
                 include_market_cap: true,
                 include_24hr_vol: true,
                 include_24hr_change :true,
@@ -43,8 +49,11 @@ const Home: React.FC = () => {
         })
 
 
-        setPriceBitcoin(priceResponse.data.bitcoin.usd)
-        setPriceEthereum(priceResponse.data.ethereum.usd)
+        setPriceBitcoinUSD(priceResponse.data.bitcoin.usd)
+        setPriceEthereumUSD(priceResponse.data.ethereum.usd)
+
+        setPriceBitcoinBRL(priceResponse.data.bitcoin.brl)
+        setPriceEthereumBRL(priceResponse.data.ethereum.brl)
     }
 
     pricesCrypto()
@@ -54,8 +63,25 @@ const Home: React.FC = () => {
         <>
 
             <H.GlobalContainer>
-                <h1>{priceBitcoin}</h1>
-                <h1>{priceEthereum}</h1>
+                <H.CryptosContainer>
+                    <H.CryptoCard>
+                        <H.CryptoIcon src={Bitcoin_Icon}/>
+                        <H.CryptoInfo>
+                            <h1>BITCOIN</h1>
+                            <span>USD: {priceBitcoinUSD} $</span>
+                            <span>BRL: {priceBitcoinBRL} R$</span>
+                        </H.CryptoInfo>
+                    </H.CryptoCard>
+
+                    <H.CryptoCard>
+                        <H.CryptoIcon src={Ethereum_Icon}/>
+                        <H.CryptoInfo>
+                            <h1>ETHEREUM</h1>
+                            <span>USD: {priceEthereumUSD} $</span>
+                            <span>BRL: {priceEthereumBRL} R$</span>
+                        </H.CryptoInfo>
+                    </H.CryptoCard>
+                </H.CryptosContainer>
             </H.GlobalContainer>
             
         </>
